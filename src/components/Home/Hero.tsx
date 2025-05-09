@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import type { Engine } from "@tsparticles/engine";
 
 const particleOptions = {
   background: { color: { value: "transparent" } },

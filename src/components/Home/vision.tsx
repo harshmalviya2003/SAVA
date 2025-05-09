@@ -155,9 +155,9 @@ const VisionCard = () => {
           variants={textVariants}
           className="text-xl md:text-2xl text-gray-300 text-center mb-10 leading-relaxed"
         >
-          <span className="text-white font-medium">"</span>
+          <span className="\text-white font-medium"></span>
           We envision a world where American manufacturing is fully automated, where humans are liberated from tedious labor to focus on creativity, humanity, and exploration.
-          <span className="text-white font-medium">"</span>
+          <span className="text-white font-medium"></span>
         </motion.blockquote>
         
         <motion.div 
@@ -200,18 +200,6 @@ const AdvancedVisionSection = () => {
     }
   }, [titleControls, inView]);
 
-  const letterVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.05,
-        duration: 0.6,
-        ease: "backOut"
-      }
-    })
-  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -225,7 +213,6 @@ const AdvancedVisionSection = () => {
     },
   };
 
-  const title = "OUR VISION";
   
   return (
     <section 

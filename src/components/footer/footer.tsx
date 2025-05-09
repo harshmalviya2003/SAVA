@@ -60,7 +60,7 @@ export default function Footer() {
           </div>
           <a href="mailto:founders@savarobotics.com" className="text-lg font-mono text-white/80 hover:text-white transition underline underline-offset-4">founders@savarobotics.com</a>
           <div className="flex gap-4 mt-2">
-            {socialLinks.map((s, i) => (
+            {socialLinks.map((s) => (
               <motion.a
                 key={s.label}
                 href={s.href}
