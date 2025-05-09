@@ -125,7 +125,7 @@ const SolutionSection = () => {
       </div>
       
       {/* Floating elements */}
-      <FloatingRobotArm />
+      {/* <FloatingRobotArm /> */}
       
       <div className="max-w-6xl mx-auto relative z-10 w-full">
         <motion.div

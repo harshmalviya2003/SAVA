@@ -227,7 +227,7 @@ const AdvancedVisionSection = () => {
       </div>
       
       {/* Floating elements */}
-      <FloatingRobotArm />
+      {/* <FloatingRobotArm /> */}
       
       <motion.div 
         initial={{ y: 50, opacity: 0 }}

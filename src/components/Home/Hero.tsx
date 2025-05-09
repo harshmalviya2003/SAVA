@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Particles from "react-tsparticles";
 
 const particleOptions = {
@@ -7,11 +7,12 @@ const particleOptions = {
   interactivity: {
     events: {
       onClick: { enable: true, mode: "push" },
-      onHover: { enable: true, mode: "repulse" }
+      onHover: { enable: true, mode: "repulse" },
+      resize: true
     },
     modes: {
-      push: { quantity: 4 },
-      repulse: { distance: 100, duration: 0.4 }
+      push: { quantity: 6 },
+      repulse: { distance: 150, duration: 0.8 }
     }
   },
   particles: {
@@ -20,35 +21,62 @@ const particleOptions = {
       color: "#ffffff",
       distance: 150,
       enable: true,
-      opacity: 0.2,
+      opacity: 0.3,
       width: 1
+    },
+    collisions: {
+      enable: true,
     },
     move: {
       enable: true,
-      speed: 1,
+      speed: 2,
       direction: "none" as const,
       random: true,
       straight: false,
-      outModes: { default: "out" as const }
+      outModes: { 
+        default: "bounce",
+        bottom: "bounce",
+        left: "bounce",
+        right: "bounce",
+        top: "bounce"
+      }
     },
-    number: { value: 60, density: { enable: true, value_area: 800 } },
+    number: { value: 80, density: { enable: true, value_area: 800 } },
     opacity: {
-      value: 0.3,
+      value: 0.4,
       random: true,
-      anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+      anim: { 
+        enable: true, 
+        speed: 1, 
+        opacity_min: 0.1, 
+        sync: false 
+      }
     },
-    shape: { type: "circle" },
+    shape: { 
+      type: ["circle", "triangle"],
+      stroke: {
+        width: 0,
+        color: "#000000"
+      },
+    },
     size: {
       value: { min: 1, max: 3 },
       random: true,
-      anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+      anim: { 
+        enable: true, 
+        speed: 2, 
+        size_min: 0.1, 
+        sync: false 
+      }
     }
   },
   detectRetina: true
 };
 
-const Hero = ()=> {
-  
+const Hero = () => {
+  const { scrollY } = useScroll();
+  const videoScale = useTransform(scrollY, [0, 300], [1, 1.2]);
+  const videoOpacity = useTransform(scrollY, [0, 300], [1, 0.8]);
 
   return (
     <section style={{ 
@@ -56,39 +84,48 @@ const Hero = ()=> {
       width: "100%", 
       height: "100vh", 
       overflow: "hidden",
-      maxWidth: "100vw"
+      maxWidth: "100vw",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     }}>
-      {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
+      {/* Background Video with Animation */}
+      <motion.div
         style={{
           position: "absolute",
           width: "100%",
           height: "100%",
-          objectFit: "cover",
-          zIndex: 1,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
+          scale: videoScale,
+          opacity: videoOpacity,
         }}
       >
-        <source src="/herofinalfr.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        >
+          <source src="/herofinalfr.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </motion.div>
 
       {/* Enhanced Particle Effect */}
       <Particles
         id="tsparticles"
-        options={particleOptions}
         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}
       />
 
-      {/* Enhanced Overlay */}
-      <div
+      {/* Enhanced Overlay with Animation */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
         style={{
           position: "absolute",
           top: 0,
@@ -96,13 +133,13 @@ const Hero = ()=> {
           width: "100%",
           height: "100%",
           zIndex: 3,
-          background: "linear-gradient(120deg, rgba(0,0,0,0.8) 0%, rgba(0, 80, 255, 0.2) 100%)",
-          backdropFilter: "blur(3px)",
+          background: "linear-gradient(120deg, rgba(0,0,0,0.9) 0%, rgba(255,255,255,0.1) 100%)",
+          backdropFilter: "blur(4px)",
           pointerEvents: "none",
         }}
       />
 
-      {/* Content */}
+      {/* Content with Enhanced Animations */}
       <div
         style={{
           position: "relative",
@@ -120,32 +157,34 @@ const Hero = ()=> {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1, type: "spring", stiffness: 100 }}
           className="mb-8"
         >
           <div style={{ 
             letterSpacing: 2, 
             fontSize: 18, 
             marginBottom: 16,
-            background: "rgba(255,255,255,0.1)",
+            background: "rgba(0,0,0,0.7)",
             padding: "8px 16px",
             borderRadius: "4px",
-            backdropFilter: "blur(4px)"
+            backdropFilter: "blur(4px)",
+            border: "1px solid rgba(255,255,255,0.1)"
           }}>
-            BACKED BY <span style={{ background: "#fff", color: "#222", borderRadius: 4, padding: "2px 8px", fontWeight: 700 }}>Y</span> COMBINATOR
+            BACKED BY <span style={{ background: "#fff", color: "#000", borderRadius: 4, padding: "2px 8px", fontWeight: 700 }}>Y</span> COMBINATOR
           </div>
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
+          transition={{ duration: 1.2, delay: 0.2, type: "spring", stiffness: 70 }}
           style={{ 
             fontSize: "clamp(2.5rem, 5vw, 4rem)", 
-            fontWeight: 800, 
+            fontWeight: 900, 
             margin: 0, 
             lineHeight: 1.1,
-            textShadow: "0 2px 10px rgba(0,0,0,0.3)"
+            textShadow: "0 2px 20px rgba(0,0,0,0.5)",
+            letterSpacing: "-1px"
           }}
         >
           INTELLIGENT<br />MANUFACTURING<br />ROBOTS
@@ -154,13 +193,14 @@ const Hero = ()=> {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.7 }}
+          transition={{ duration: 1, delay: 0.7, type: "spring", stiffness: 50 }}
           style={{ 
             margin: "32px 0 24px 0", 
             fontSize: "clamp(1rem, 2vw, 1.375rem)", 
             letterSpacing: 1, 
             fontFamily: "monospace",
-            maxWidth: "800px"
+            maxWidth: "800px",
+            textShadow: "0 2px 10px rgba(0,0,0,0.3)"
           }}
         >
           SAVA IS BUILDING THE FIRST PLUG-AND-PLAY PRESS BRAKE OPERATOR
@@ -170,13 +210,14 @@ const Hero = ()=> {
           href="#about"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 1.1 }}
+          transition={{ duration: 0.7, delay: 1.1, type: "spring", stiffness: 100 }}
           whileHover={{ 
             scale: 1.08, 
-            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
             backgroundColor: "#ffffff",
             color: "#000000"
           }}
+          whileTap={{ scale: 0.95 }}
           style={{
             display: "inline-block",
             background: "rgba(255,255,255,0.1)",
@@ -186,7 +227,7 @@ const Hero = ()=> {
             borderRadius: 10,
             padding: "18px 44px",
             textDecoration: "none",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
             transition: "all 0.3s cubic-bezier(.4,2,.6,1)",
             cursor: "pointer",
             marginTop: 10,
@@ -197,7 +238,7 @@ const Hero = ()=> {
           LEARN MORE
         </motion.a>
 
-        {/* Scroll Indicator */}
+        {/* Enhanced Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -214,16 +255,34 @@ const Hero = ()=> {
           }}
         >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={{ 
+              y: [0, 10, 0],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{ 
+              duration: 1.5, 
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
             style={{
               width: "2px",
               height: "40px",
-              background: "rgba(255,255,255,0.5)",
-              borderRadius: "2px"
+              background: "rgba(255,255,255,0.7)",
+              borderRadius: "2px",
+              boxShadow: "0 0 10px rgba(255,255,255,0.3)"
             }}
           />
-          <span style={{ fontSize: "12px", opacity: 0.7 }}>Scroll to explore</span>
+          <motion.span 
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ 
+              fontSize: "12px", 
+              opacity: 0.8, 
+              textShadow: "0 2px 4px rgba(0,0,0,0.3)" 
+            }}
+          >
+            Scroll to explore
+          </motion.span>
         </motion.div>
       </div>
     </section>

@@ -22,25 +22,25 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed w-full z-50 bg-white dark:bg-black backdrop-blur-md border-b border-black dark:border-white">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header className="fixed w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="font-roboto-mono text-xl font-bold text-black dark:text-white"
+            className="font-posterama tracking-widest text-2xl  text-black dark:text-white"
           >
-            SAVA ROBOTICS
+            SAVA 
           </motion.div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex space-x-8">
+        <nav className="hidden md:flex space-x-10">
           {navLinks.map((link) => (
             <Link key={link.name} href={link.path}>
               <motion.span
                 whileHover={{ y: -2 }}
-                className="font-roboto-mono text-black dark:text-white cursor-pointer text-sm font-medium"
+                className="font-roboto-mono text-black dark:text-white cursor-pointer text-sm font-medium hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 {link.name}
               </motion.span>
@@ -48,24 +48,32 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Dark/Light Mode Toggle */}
         {mounted && (
           <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 rounded-full bg-black text-white dark:bg-white dark:text-black"
+            whileHover={{ scale: 1.05 }}
+            className="hidden md:block px-6 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-medium"
           >
-            {theme === "dark" ? "☀️" : "🌙"}
+            Reserve A Robot
           </motion.button>
         )}
 
         {/* Mobile Menu Toggle */}
-        <button
+        <motion.button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden p-2 rounded-full bg-black text-white dark:bg-white dark:text-black"
+          whileTap={{ scale: 0.95 }}
+          animate={isOpen ? "open" : "closed"}
         >
-          {isOpen ? "✕" : "☰"}
-        </button>
+          <motion.span
+            variants={{
+              open: { rotate: 180, opacity: 1 },
+              closed: { rotate: 0, opacity: 1 }
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {isOpen ? "✕" : "☰"}
+          </motion.span>
+        </motion.button>
       </div>
 
       {/* Mobile Menu (Animated) */}
