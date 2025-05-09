@@ -115,7 +115,7 @@ const ReservationSection = () => {
           </div>
           
           <div className="text-center">
-            <p className="text-gray-400 mb-6">The first SAVA press brake operator ships:</p>
+            <p className="text-gray-400 mb-6">The first SAVA ROBOTICS press brake operator ships:</p>
             <div className="text-3xl font-bold text-white mb-2">JULY 4, 2026</div>
             <div className="h-px bg-gray-700 w-1/2 mx-auto my-6"></div>
             

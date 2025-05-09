@@ -28,7 +28,7 @@ export default function Header() {
             whileHover={{ scale: 1.05 }}
             className="font-posterama tracking-widest text-2xl  text-black dark:text-white"
           >
-            SAVA 
+            SAVA ROBOTICS
           </motion.div>
         </Link>
 

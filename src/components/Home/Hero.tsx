@@ -133,7 +133,7 @@ const Hero = () => {
             textShadow: "0 2px 10px rgba(0,0,0,0.3)"
           }}
         >
-          SAVA IS BUILDING THE FIRST PLUG-AND-PLAY PRESS BRAKE OPERATOR
+          SAVA ROBOTICS IS BUILDING THE FIRST PLUG-AND-PLAY PRESS BRAKE OPERATOR
         </motion.div>
 
         <motion.a
