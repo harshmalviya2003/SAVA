@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
 
 export default function Error({
   error,
@@ -18,25 +17,19 @@ export default function Error({
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white px-4">
       <div className="text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div className="animate-fade-in">
           <h1 className="text-6xl font-bold mb-4">Oops!</h1>
           <h2 className="text-2xl mb-6">Something went wrong</h2>
           <p className="text-gray-400 mb-8">
             We apologize for the inconvenience. Please try again.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => reset()}
-            className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors"
+            className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all hover:scale-105 active:scale-95"
           >
             Try Again
-          </motion.button>
-        </motion.div>
+          </button>
+        </div>
       </div>
     </main>
   );
