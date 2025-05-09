@@ -61,33 +61,33 @@ const HolographicText = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const FloatingRobotArm = () => {
-  return (
-    <motion.div
-      initial={{ y: 0, rotate: -15 }}
-      animate={{
-        y: [0, -20, 0],
-        rotate: [-15, 15, -15],
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        ease: 'easeInOut'
-      }}
-      className="absolute left-1/4 top-1/3 opacity-80"
-    >
-      <svg width="120" height="120" viewBox="0 0 24 24" fill="none" className="text-white">
-        <path d="M17 11V7a1 1 0 0 0-1-1h-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M7 11V7a1 1 0 0 1 1-1h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" strokeWidth="2"/>
-        <path d="M12 15v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M12 11V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="m4 15 3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="m20 15-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    </motion.div>
-  );
-};
+// const FloatingRobotArm = () => {
+//   return (
+//     <motion.div
+//       initial={{ y: 0, rotate: -15 }}
+//       animate={{
+//         y: [0, -20, 0],
+//         rotate: [-15, 15, -15],
+//       }}
+//       transition={{
+//         duration: 8,
+//         repeat: Infinity,
+//         ease: 'easeInOut'
+//       }}
+//       className="absolute left-1/4 top-1/3 opacity-80"
+//     >
+//       <svg width="120" height="120" viewBox="0 0 24 24" fill="none" className="text-white">
+//         <path d="M17 11V7a1 1 0 0 0-1-1h-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//         <path d="M7 11V7a1 1 0 0 1 1-1h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//         <path d="M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" strokeWidth="2"/>
+//         <path d="M12 15v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//         <path d="M12 11V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//         <path d="m4 15 3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//         <path d="m20 15-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+//       </svg>
+//     </motion.div>
+//   );
+// };
 
 const VisionCard = () => {
   const controls = useAnimation();

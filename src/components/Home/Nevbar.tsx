@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => setMounted(true), []);
