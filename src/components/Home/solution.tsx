@@ -12,7 +12,7 @@ import * as random from 'maath/random/dist/maath-random.esm';
 const ParticleBackground = () => {
   const particlesRef = useRef<THREE.Points>(null);
   
-  useFrame((state: any  , delta: number) => {
+  useFrame((state, delta: number) => {
     if (particlesRef.current) {
       particlesRef.current.rotation.x -= delta / 10;
       particlesRef.current.rotation.y -= delta / 15;

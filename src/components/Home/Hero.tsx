@@ -49,10 +49,8 @@ const particleOptions = {
   detectRetina: true
 };
 
-const Hero: React.FC = () => {
-  const particlesInit = useCallback(async (engine: any) => {
-    await loadFull(engine);
-  }, []);
+const Hero = ()=> {
+  
 
   return (
     <section style={{ 
@@ -87,7 +85,6 @@ const Hero: React.FC = () => {
       {/* Enhanced Particle Effect */}
       <Particles
         id="tsparticles"
-        init={particlesInit}
         options={particleOptions}
         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}
       />
