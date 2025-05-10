@@ -1,234 +1,340 @@
-// components/ProblemSection.tsx
 'use client';
 
-import { motion, useAnimation } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger, ScrollToPlugin } from 'gsap/all';
+
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+// Define the Problem type for the problems array
+interface Problem {
+  title: string;
+  description: string;
+  icon: string;
+}
 
 const ProblemSection = () => {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const sectionRef = useRef<HTMLElement>(null);
+  const panelsContainerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (inView) {
-      controls.start('visible');
-    }
-  }, [controls, inView]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0, rotateX: -30 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      rotateX: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
-  const problems = [
+  const problems: Problem[] = [
+   
     {
-      title: "NO ONE (OR THING) TO OPERATE PRESS BRAKES",
-      description: "Critical shortage of skilled manufacturing operators.",
-      icon: "M7 11V7a1 1 0 0 1 1-1h3M17 11V7a1 1 0 0 0-1-1h-3M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+      title: 'NO ONE (OR THING) TO OPERATE PRESS BRAKES',
+      description: 'The manufacturing industry faces a critical shortage of skilled operators, with 2.1 million jobs expected to go unfilled by 2030. This skills gap is causing production delays, increased costs, and lost business opportunities. Many experienced operators are retiring, while younger generations show less interest in manufacturing careers.',
+      icon: 'M7 11V7a1 1 0 0 1 1-1h3M17 11V7a1 1 0 0 0-1-1h-3M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
     },
     {
-      title: "EQUIPMENT REPLACEMENT COSTS",
-      description: "Automation cells require shops to replace existing equipment.",
-      icon: "M20 7h-4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+      title: 'EQUIPMENT REPLACEMENT COSTS',
+      description: 'Traditional automation solutions require complete equipment replacement, with costs ranging from $500,000 to $2 million per cell. This massive investment creates significant barriers to entry, especially for small to medium-sized manufacturers. Many shops are forced to continue using outdated equipment due to these prohibitive costs.',
+      icon: 'M20 7h-4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16',
     },
     {
-      title: "INEFFICIENT PROGRAMMING",
-      description: "Tedious programming causes shops to turn down profitable jobs.",
-      icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-    }
+      title: 'INEFFICIENT PROGRAMMING',
+      description: 'Current programming methods for press brakes are time-consuming and complex, requiring specialized expertise. On average, operators spend 2-3 hours programming a single part, leading to significant downtime. This inefficiency causes manufacturers to turn down profitable jobs and struggle with quick-turnaround requirements.',
+      icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+    },
   ];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header pin animation
+      if (headerRef.current) {
+        gsap.to(headerRef.current, {
+          scrollTrigger: {
+            trigger: headerRef.current,
+            pin: true,
+            start: 'top top',
+            end: '+=1000',
+            pinSpacing: false,
+          },
+        });
+      }
+
+      // Anchor navigation
+      document.querySelectorAll<HTMLAnchorElement>('.anchor').forEach((anchor) => {
+        anchor.addEventListener('click', (e: MouseEvent) => {
+          e.preventDefault();
+          const targetId = anchor.getAttribute('href')?.substring(1);
+          if (!targetId) return;
+
+          const targetElem = document.getElementById(targetId);
+          if (!targetElem) return;
+
+          let y: number | HTMLElement = targetElem;
+
+          if (
+            panelsContainerRef.current &&
+            panelsContainerRef.current.contains(targetElem)
+          ) {
+            const panels = gsap.utils.toArray<HTMLElement>('.panel');
+            const tween = gsap.getTweensOf(panels)[0];
+            const totalScroll = tween.scrollTrigger!.end - tween.scrollTrigger!.start;
+            const totalMovement = (panels.length - 1) * targetElem.offsetWidth;
+            y = tween.scrollTrigger!.start + (targetElem.offsetLeft / totalMovement) * totalScroll;
+          }
+
+          gsap.to(window, {
+            scrollTo: {
+              y,
+              autoKill: false,
+            },
+            duration: 1,
+          });
+        });
+      });
+
+      // Panels horizontal scroll
+      if (panelsContainerRef.current) {
+        const panels = gsap.utils.toArray<HTMLElement>('.panel');
+        gsap.to(panels, {
+          xPercent: -100 * (panels.length - 1),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: panelsContainerRef.current,
+            pin: true,
+            start: 'top top',
+            scrub: 1,
+            snap: {
+              snapTo: 1 / (panels.length - 1),
+              inertia: false,
+              duration: { min: 0.1, max: 0.1 },
+            },
+            end: () =>
+              '+=' +
+              (panelsContainerRef.current!.offsetWidth - window.innerWidth),
+          },
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section ref={ref} className="relative py-32 px-4 bg-black overflow-hidden">
+    <div className="relative bg-black min-h-screen overflow-hidden">
+      {/* Background particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="particle absolute w-1 h-1 bg-white/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              filter: 'blur(1px)',
+              animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Industrial blueprint background */}
-      <div className="absolute inset-0 opacity-[3%]">
-        <div className="absolute inset-0 bg-[url('/blueprint-pattern.svg')] bg-repeat bg-[size:200px]"></div>
-      </div>
-      
-      {/* Animated scanning effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          initial={{ y: -100 }}
-          animate={{ y: '100vh' }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-          className="absolute left-0 right-0 h-px bg-white/10 z-0"
-        />
-        <motion.div
-          initial={{ x: '-100%' }}
-          animate={{ x: '100%' }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear', delay: 3 }}
-          className="absolute top-1/3 w-full h-px bg-white/5 z-0"
+      <div className="absolute inset-0 opacity-[8%]">
+        <div
+          className="absolute inset-0 bg-repeat bg-[size:200px]"
+          style={{ backgroundImage: "url('/blueprint-pattern.svg')" }}
         />
       </div>
 
-      <div className="max-w-7xl mx-auto relative">
-        <motion.div
-          initial="hidden"
-          animate={controls}
-          variants={containerVariants}
-          className="text-center mb-16 px-4"
-        >
-          <motion.h2 
-            variants={itemVariants}
-            className="text-4xl md:text-6xl font-bold text-white mb-4"
-          >
-            <span className="text-gray-300">THE</span> PROBLEM
-          </motion.h2>
-          
-          <motion.p 
-            variants={itemVariants}
-            className="text-lg text-gray-400 max-w-2xl mx-auto"
-          >
-            Modern manufacturing faces critical bottlenecks that hinder productivity and profitability.
-          </motion.p>
-          
-          <motion.div 
-            variants={itemVariants}
-            className="h-px bg-gradient-to-r from-transparent via-white to-transparent mx-auto w-1/4 mt-6"
-          />
-        </motion.div>
+      <header
+      >
 
-        <motion.div
-          initial="hidden"
-          animate={controls}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 relative"
-        >
-          {/* Connecting lines animation */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.5, delay: 0.8 }}
-            className="hidden md:block absolute top-1/2 left-0 right-0 h-px bg-white/10 z-0"
-          />
-          
-          {problems.map((problem, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              custom={index}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 relative overflow-hidden group"
-              whileHover={{ y: -10, borderColor: 'rgba(255,255,255,0.3)' }}
+      </header>
+
+      <main ref={sectionRef} className="relative">
+        <section id="panels">
+          <div
+            ref={panelsContainerRef}
+            id="panels-container"
+            className="flex flex-nowrap min-h-screen"
+            style={{ width: `${problems.length * 100}%` }}
+          >
+            {/* First panel with Manufacturing Challenges */}
+            <article
+              id="intro"
+              className="panel min-h-[20px] sm:min-h-screen w-full flex items-center justify-center bg-black relative"
             >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              {/* Industrial icon */}
-              <motion.div 
-                className="w-16 h-16 bg-black border-2 border-white/20 rounded-full flex items-center justify-center mb-6"
-                whileHover={{ rotate: 10, scale: 1.05 }}
-              >
-                <svg 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                  className="text-white"
-                >
-                  <path d={problem.icon} />
-                </svg>
-              </motion.div>
-              
-              <motion.h3 
-                className="text-2xl font-bold text-white mb-4 uppercase tracking-tight"
-                whileHover={{ x: 5 }}
-              >
-                {problem.title}
-              </motion.h3>
-              
-              <motion.p 
-                className="text-gray-300 leading-relaxed mb-6"
-                whileHover={{ x: 5 }}
-              >
-                {problem.description}
-              </motion.p>
-              
-              {/* Animated indicator */}
-              <motion.div 
-                className="flex items-center text-white/50 group-hover:text-white transition-colors"
-                whileHover={{ x: 5 }}
-              >
-                <span className="mr-2">Learn more</span>
-                <motion.div
-                  initial={{ x: 0 }}
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  →
-                </motion.div>
-              </motion.div>
-              
-              {/* Animated border */}
-              <motion.div 
-                className="absolute bottom-0 left-0 right-0 h-px bg-white/30 origin-left"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                viewport={{ once: true }}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+              <div className="absolute inset-0 border-2 border-white/20 m-1 sm:m-8 md:m-16 lg:m-24"></div>
+              <div className="max-w-4xl mx-auto px-2 md:px-8 relative z-10">
+                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight text-center mb-4 sm:mb-6">
+                  Manufacturing Challenges
+                </h1>
+                <div className="flex justify-center mt-6 sm:mt-8">
+                  <a
+                    href="#panel-1"
+                    className="anchor text-white hover:text-gray-300 transition-all duration-300 px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-sm sm:text-base md:text-lg border-2 border-white/20 rounded-lg hover:bg-white/5 hover:border-white/40 flex items-center gap-2"
+                  >
+                    Explore Challenges
+                    <svg
+                      width="16"
+                      height="16"
+                      className="sm:w-5 sm:h-5 animate-bounce"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </article>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="mt-24 text-center"
-        >
-          <motion.button
-            className="px-10 py-5 bg-white text-black font-bold rounded-full relative overflow-hidden group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="relative z-10 flex items-center">
-              Discover Our Solutions
-              <motion.span
-                initial={{ x: 0 }}
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1.8 }}
-                className="ml-2"
+            {/* Problem panels */}
+            {problems.map((problem, index) => (
+              <article
+                key={index}
+                id={`panel-${index + 1}`}
+                className="panel min-h-[20px] sm:min-h-screen w-full flex items-center justify-center bg-black border-l border-white/20 relative"
               >
-                →
-              </motion.span>
-            </span>
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 25 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0 bg-black/5 rounded-full opacity-0 group-hover:opacity-100"
-            />
-          </motion.button>
-        </motion.div>
-      </div>
-    </section>
+                <div className="absolute inset-0 border-2 border-white/20 m-1 sm:m-8 md:m-16 lg:m-24"></div>
+                
+                <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center px-2 md:px-8 relative z-10">
+                  <div className="w-full md:w-1/3 mb-6 md:mb-0 flex justify-center">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-black border-2 border-white/20 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                      <svg
+                        width="28"
+                        height="28"
+                        className="sm:w-9 sm:h-9 md:w-12 md:h-12 text-white"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d={problem.icon} />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="w-full md:w-2/3 flex flex-col">
+                    <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight tracking-tight text-center md:text-left">
+                      {problem.title}
+                    </h2>
+                    <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-4 sm:mb-6 md:mb-8 leading-relaxed tracking-wide text-center md:text-left">
+                      {problem.description}
+                    </p>
+                    <div className="flex justify-center md:justify-end space-x-3 sm:space-x-4">
+                      {index > 0 && (
+                        <a
+                          href={`#panel-${index}`}
+                          className="anchor text-white hover:text-gray-300 transition-all duration-300 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base border-2 border-white/20 rounded-lg hover:bg-white/5 hover:border-white/40"
+                        >
+                          Previous
+                        </a>
+                      )}
+                      {index < problems.length - 1 && (
+                        <a
+                          href={`#panel-${index + 2}`}
+                          className="anchor text-white hover:text-gray-300 transition-all duration-300 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base border-2 border-white/20 rounded-lg hover:bg-white/5 hover:border-white/40"
+                        >
+                          Next
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+          #panels-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          #panels-container::-webkit-scrollbar {
+            display: none;
+          }
+          .panel {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+          }
+        }
+
+        /* Smooth scroll behavior */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Mobile touch improvements */
+        @media (hover: none) {
+          .anchor {
+            padding: 0.75rem 1rem;
+            min-height: 44px;
+            min-width: 44px;
+          }
+        }
+
+        /* Better touch targets for mobile */
+        @media (max-width: 640px) {
+          .panel {
+            padding: 1rem;
+          }
+          
+          .anchor {
+            touch-action: manipulation;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
 
 export default ProblemSection;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
