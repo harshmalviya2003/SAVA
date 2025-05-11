@@ -135,7 +135,7 @@ export default function Footer() {
 
       {/* Bottom copyright */}
       <div className="relative text-center text-xs text-white/60 font-mono pb-6">
-        © {new Date().getFullYear()} SAVA ROBOTICS // ALL RIGHTS RESERVED
+        © {new Date().getFullYear()} SAVA ROBOTICS // Design By DesignsVerse
       </div>
     </footer>
   );
