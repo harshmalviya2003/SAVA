@@ -22,7 +22,6 @@ export default function Header() {
   return (
     <header className="fixed w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
         <Link href="/">
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -32,7 +31,6 @@ export default function Header() {
           </motion.div>
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-10">
           {navLinks.map((link) => (
             <Link key={link.name} href={link.path}>
@@ -55,7 +53,6 @@ export default function Header() {
           </motion.button>
         )}
 
-        {/* Mobile Menu Toggle */}
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden p-2 rounded-full bg-black text-white dark:bg-white dark:text-black"
@@ -74,7 +71,6 @@ export default function Header() {
         </motion.button>
       </div>
 
-      {/* Mobile Menu (Animated) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

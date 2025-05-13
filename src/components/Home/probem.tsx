@@ -1,13 +1,11 @@
-'use client';
+"use client";
 
-
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger, ScrollToPlugin } from 'gsap/all';
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger, ScrollToPlugin } from "gsap/all";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// Define the Problem type for the problems array
 interface Problem {
   title: string;
   description: string;
@@ -20,82 +18,87 @@ const ProblemSection = () => {
   const headerRef = useRef<HTMLElement>(null);
 
   const problems: Problem[] = [
-   
     {
-      title: 'NO ONE (OR THING) TO OPERATE PRESS BRAKES',
-      description: 'The manufacturing industry faces a critical shortage of skilled operators, with 2.1 million jobs expected to go unfilled by 2030. This skills gap is causing production delays, increased costs, and lost business opportunities. Many experienced operators are retiring, while younger generations show less interest in manufacturing careers.',
-      icon: 'M7 11V7a1 1 0 0 1 1-1h3M17 11V7a1 1 0 0 0-1-1h-3M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+      title: "NO ONE (OR THING) TO OPERATE PRESS BRAKES",
+      description:
+        "The manufacturing industry faces a critical shortage of skilled operators, with 2.1 million jobs expected to go unfilled by 2030. This skills gap is causing production delays, increased costs, and lost business opportunities. Many experienced operators are retiring, while younger generations show less interest in manufacturing careers.",
+      icon: "M7 11V7a1 1 0 0 1 1-1h3M17 11V7a1 1 0 0 0-1-1h-3M12 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
     },
     {
-      title: 'EQUIPMENT REPLACEMENT COSTS',
-      description: 'Traditional automation solutions require complete equipment replacement, with costs ranging from $500,000 to $2 million per cell. This massive investment creates significant barriers to entry, especially for small to medium-sized manufacturers. Many shops are forced to continue using outdated equipment due to these prohibitive costs.',
-      icon: 'M20 7h-4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16',
+      title: "EQUIPMENT REPLACEMENT COSTS",
+      description:
+        "Traditional automation solutions require complete equipment replacement, with costs ranging from $500,000 to $2 million per cell. This massive investment creates significant barriers to entry, especially for small to medium-sized manufacturers. Many shops are forced to continue using outdated equipment due to these prohibitive costs.",
+      icon: "M20 7h-4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16",
     },
     {
-      title: 'INEFFICIENT PROGRAMMING',
-      description: 'Current programming methods for press brakes are time-consuming and complex, requiring specialized expertise. On average, operators spend 2-3 hours programming a single part, leading to significant downtime. This inefficiency causes manufacturers to turn down profitable jobs and struggle with quick-turnaround requirements.',
-      icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+      title: "INEFFICIENT PROGRAMMING",
+      description:
+        "Current programming methods for press brakes are time-consuming and complex, requiring specialized expertise. On average, operators spend 2-3 hours programming a single part, leading to significant downtime. This inefficiency causes manufacturers to turn down profitable jobs and struggle with quick-turnaround requirements.",
+      icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
     },
   ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header pin animation
       if (headerRef.current) {
         gsap.to(headerRef.current, {
           scrollTrigger: {
             trigger: headerRef.current,
             pin: true,
-            start: 'top top',
-            end: '+=1000',
+            start: "top top",
+            end: "+=1000",
             pinSpacing: false,
           },
         });
       }
 
-      // Anchor navigation
-      document.querySelectorAll<HTMLAnchorElement>('.anchor').forEach((anchor) => {
-        anchor.addEventListener('click', (e: MouseEvent) => {
-          e.preventDefault();
-          const targetId = anchor.getAttribute('href')?.substring(1);
-          if (!targetId) return;
+      document
+        .querySelectorAll<HTMLAnchorElement>(".anchor")
+        .forEach((anchor) => {
+          anchor.addEventListener("click", (e: MouseEvent) => {
+            e.preventDefault();
+            const targetId = anchor.getAttribute("href")?.substring(1);
+            if (!targetId) return;
 
-          const targetElem = document.getElementById(targetId);
-          if (!targetElem) return;
+            const targetElem = document.getElementById(targetId);
+            if (!targetElem) return;
 
-          let y: number | HTMLElement = targetElem;
+            let y: number | HTMLElement = targetElem;
 
-          if (
-            panelsContainerRef.current &&
-            panelsContainerRef.current.contains(targetElem)
-          ) {
-            const panels = gsap.utils.toArray<HTMLElement>('.panel');
-            const tween = gsap.getTweensOf(panels)[0];
-            const totalScroll = tween.scrollTrigger!.end - tween.scrollTrigger!.start;
-            const totalMovement = (panels.length - 1) * targetElem.offsetWidth;
-            y = tween.scrollTrigger!.start + (targetElem.offsetLeft / totalMovement) * totalScroll;
-          }
+            if (
+              panelsContainerRef.current &&
+              panelsContainerRef.current.contains(targetElem)
+            ) {
+              const panels = gsap.utils.toArray<HTMLElement>(".panel");
+              const tween = gsap.getTweensOf(panels)[0];
+              const totalScroll =
+                tween.scrollTrigger!.end - tween.scrollTrigger!.start;
+              const totalMovement =
+                (panels.length - 1) * targetElem.offsetWidth;
+              y =
+                tween.scrollTrigger!.start +
+                (targetElem.offsetLeft / totalMovement) * totalScroll;
+            }
 
-          gsap.to(window, {
-            scrollTo: {
-              y,
-              autoKill: false,
-            },
-            duration: 1,
+            gsap.to(window, {
+              scrollTo: {
+                y,
+                autoKill: false,
+              },
+              duration: 1,
+            });
           });
         });
-      });
 
-      // Panels horizontal scroll
       if (panelsContainerRef.current) {
-        const panels = gsap.utils.toArray<HTMLElement>('.panel');
+        const panels = gsap.utils.toArray<HTMLElement>(".panel");
         gsap.to(panels, {
           xPercent: -100 * (panels.length - 1),
-          ease: 'none',
+          ease: "none",
           scrollTrigger: {
             trigger: panelsContainerRef.current,
             pin: true,
-            start: 'top top',
+            start: "top top",
             scrub: 1,
             snap: {
               snapTo: 1 / (panels.length - 1),
@@ -103,7 +106,7 @@ const ProblemSection = () => {
               duration: { min: 0.1, max: 0.1 },
             },
             end: () =>
-              '+=' +
+              "+=" +
               (panelsContainerRef.current!.offsetWidth - window.innerWidth),
           },
         });
@@ -115,7 +118,6 @@ const ProblemSection = () => {
 
   return (
     <div className="relative bg-black min-h-screen overflow-hidden">
-      {/* Background particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(50)].map((_, i) => (
           <div
@@ -124,14 +126,15 @@ const ProblemSection = () => {
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              filter: 'blur(1px)',
-              animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
+              filter: "blur(1px)",
+              animation: `float ${
+                Math.random() * 10 + 5
+              }s infinite ease-in-out`,
             }}
           />
         ))}
       </div>
 
-      {/* Industrial blueprint background */}
       <div className="absolute inset-0 opacity-[8%]">
         <div
           className="absolute inset-0 bg-repeat bg-[size:200px]"
@@ -139,10 +142,7 @@ const ProblemSection = () => {
         />
       </div>
 
-      <header
-      >
-
-      </header>
+      <header></header>
 
       <main ref={sectionRef} className="relative">
         <section id="panels">
@@ -152,7 +152,6 @@ const ProblemSection = () => {
             className="flex flex-nowrap min-h-screen"
             style={{ width: `${problems.length * 100}%` }}
           >
-            {/* First panel with Manufacturing Challenges */}
             <article
               id="intro"
               className="panel min-h-[20px] sm:min-h-screen w-full flex items-center justify-center bg-black relative"
@@ -186,7 +185,6 @@ const ProblemSection = () => {
               </div>
             </article>
 
-            {/* Problem panels */}
             {problems.map((problem, index) => (
               <article
                 key={index}
@@ -194,7 +192,7 @@ const ProblemSection = () => {
                 className="panel min-h-[20px] sm:min-h-screen w-full flex items-center justify-center bg-black border-l border-white/20 relative"
               >
                 <div className="absolute inset-0 border-2 border-white/20 m-1 sm:m-8 md:m-16 lg:m-24"></div>
-                
+
                 <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center px-2 md:px-8 relative z-10">
                   <div className="w-full md:w-1/3 mb-6 md:mb-0 flex justify-center">
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-black border-2 border-white/20 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)]">
@@ -248,8 +246,13 @@ const ProblemSection = () => {
 
       <style jsx global>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
         }
 
         @media (max-width: 768px) {
@@ -288,7 +291,7 @@ const ProblemSection = () => {
           .panel {
             padding: 1rem;
           }
-          
+
           .anchor {
             touch-action: manipulation;
           }
@@ -299,42 +302,3 @@ const ProblemSection = () => {
 };
 
 export default ProblemSection;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -19,7 +19,6 @@ const Hero = () => {
       alignItems: "center",
       justifyContent: "center"
     }}>
-      {/* Background Video with Animation */}
       <motion.div
         style={{
           position: "absolute",
@@ -45,13 +44,11 @@ const Hero = () => {
         </video>
       </motion.div>
 
-      {/* Enhanced Particle Effect */}
       <Particles
         id="tsparticles"
         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}
       />
 
-      {/* Enhanced Overlay with Animation */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -69,7 +66,6 @@ const Hero = () => {
         }}
       />
 
-      {/* Content with Enhanced Animations */}
       <div
         style={{
           position: "relative",
@@ -168,7 +164,6 @@ const Hero = () => {
           LEARN MORE
         </motion.a>
 
-        {/* Enhanced Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

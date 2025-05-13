@@ -5,26 +5,21 @@ import { gsap } from "gsap";
 import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-// Register the plugins
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const SplitTextAnimation: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Wait for fonts to load to avoid layout shifts
     document.fonts.ready.then(() => {
-      // Set initial opacity
       gsap.set("h2", { opacity: 1 });
 
-      // Create SplitText instance
       const headlineSplit = new SplitText("h2", {
         type: "words",
         wordsClass: "word++",
         ignore: "sup",
       });
 
-      // GSAP animation with ScrollTrigger
       gsap.from(headlineSplit.words, {
         y: -100,
         opacity: 0,
@@ -35,29 +30,32 @@ const SplitTextAnimation: React.FC = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
+          toggleActions: "play none none reverse",
+        },
       });
 
-      // Cleanup on unmount
       return () => {
-        headlineSplit.revert(); // Revert SplitText to original state
+        headlineSplit.revert();
       };
     });
   }, []);
 
   return (
-    <div ref={containerRef} className="container flex flex-col items-center justify-center min-h-[50vh] w-[90vw] mx-auto rounded-lg px-4 sm:px-6 md:px-8">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold opacity-0 text-center">
-        <h2>Cutting-Edge Robotics Solutions<sup>™</sup> for Industrial Automation</h2>
-      </h2>
+    <div
+      ref={containerRef}
+      className="container w-full overflow-hidden px-4 sm:px-6 md:px-8"
+    >
+      <div className="flex flex-col items-center justify-center min-h-[50vh] mx-auto max-w-[90vw] rounded-lg">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold opacity-0 text-center">
+          Cutting-Edge Robotics Solutions<sup>™</sup> for Industrial Automation
+        </h2>
+      </div>
     </div>
   );
 };
 
-// Inline Tailwind styles in a style tag (single white color scheme)
 const TailwindStyles = () => (
-  <style jsx>{`
+  <style jsx global>{`
     .container {
       position: relative;
     }
@@ -96,7 +94,7 @@ const TailwindStyles = () => (
       }
     }
     .word::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -109,14 +107,13 @@ const TailwindStyles = () => (
     sup {
       line-height: 0;
       font-size: 0.7em;
+      vertical-align: super;
     }
   `}</style>
 );
 
-// Wrap the component with styles
 const SplitTextAnimationWithStyles = () => (
   <>
-    <TailwindStyles />
     <SplitTextAnimation />
   </>
 );
